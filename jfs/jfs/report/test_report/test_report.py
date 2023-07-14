@@ -149,8 +149,8 @@ SELECT
     {select_fields} ,
     cgst.tax_amount * COALESCE({filters.reversal_percentage} , pi.reversal_percentage) /100 AS rcgst,
     sgst.tax_amount * COALESCE({filters.reversal_percentage}   , pi.reversal_percentage)/100 AS rsgst,
-    igst.tax_amount * COALESCE({filters.reversal_percentage} , pi.reversal_percentage)/100 AS rigst,
-    pi.`state` AS 'state'
+    igst.tax_amount * COALESCE({filters.reversal_percentage} , pi.reversal_percentage)/100 AS rigst
+   
 FROM
     `tabPurchase Invoice` AS pi
     LEFT JOIN `tabPurchase Invoice Item` AS pii ON pii.parent = pi.name
@@ -197,8 +197,8 @@ SELECT
     50 AS reversal_percentage,
     cgst.tax_amount/2 AS rcgst ,
     sgst.tax_amount/2 AS rsgst ,
-    igst.tax_amount/2 AS rigst,
-    pi.`state` AS 'state'
+    igst.tax_amount/2 AS rigst
+  
 FROM
     `tabPurchase Invoice` AS pi
    LEFT JOIN `tabPurchase Invoice Item` AS pii ON pii.parent = pi.name

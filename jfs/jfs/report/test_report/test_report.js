@@ -199,13 +199,7 @@ function create_dialog_employee(emp_data) {
             in_list_view: 1,
             label: "Reversal IGST Amt",
           },
-          {
-            fieldname: "state",
-            columns: 1,
-            fieldtype: "Data",
-            in_list_view: 1,
-            label: "State",
-          },
+        
         ],
       },
     ],
@@ -257,7 +251,6 @@ function create_dialog_employee(emp_data) {
               voucher_type: "Reversal Of ITC",
               reversal_type: "Others",
               company_address: item.billing_address,
-              state:item.state,
               accounts: arraya,
              
             })
@@ -296,7 +289,7 @@ function create_dialog_employee(emp_data) {
         rcgst: d.rcgst,
         rsgst: d.rsgst,
         rigst: d.rigst,
-        state:d.state
+       
       });
       data = cur_dialog.fields_dict.purchase_invoice.df.data;
       cur_dialog.fields_dict.purchase_invoice.grid.refresh();
