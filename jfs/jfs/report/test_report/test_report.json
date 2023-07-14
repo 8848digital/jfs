@@ -1,0 +1,41 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2023-07-07 16:26:17.290862",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "javascript": "frappe.query_reports[\"Test Report\"] = {\n\t\"filters\": [\n\t\t{\n\t\t\t\"fieldname\": \"company\",\n\t\t\t\"label\": \"Company\",\n\t\t\t\"fieldtype\": \"Link\",\n\t\t\t\"options\": \"Company\"\n\t\t},\n\t\t{\n\t\t\t\"fieldname\": \"supplier\",\n\t\t\t\"label\": \"Supplier\",\n\t\t\t\"fieldtype\": \"Link\",\n\t\t\t\"options\": \"Supplier\"\n\t\t},\n\t\t{\n\t\t\t\"fieldname\": \"posting_date\",\n\t\t\t\"label\": \"From Date\",\n\t\t\t\"fieldtype\": \"Date\"\n\t\t},\n\t\t{\n\t\t\t\"fieldname\": \"posting_date\",\n\t\t\t\"label\": \"To Date\",\n\t\t\t\"fieldtype\": \"Date\"\n\t\t},\n\t],\n\tonload: function(report) {\n\t\n\n\t\tvar newButton = report.page.add_inner_button(__(\"Make Reversal\"), function() {\n\t\t\t// Custom button functionality here\n\t\t\n\n\t\t\t// Open a popup dialog\n\t\t\tvar dialog = new frappe.ui.Dialog({\n\t\t\t\ttitle: __(\"Make Reversal\"),\n\t\t\t\tfields: [\n\t\t\t\t\t{\n\t\t\t\t\t\tfieldname: \"name\",\n\t\t\t\t\t\tlabel: __(\"Invoice No\"),\n\t\t\t\t\t\tfieldtype: \"Link\",\n\t\t\t\t\t\toptions: \"Purchase Invoice\",\n\t\t\t\t\t\t\n\t\t\t\t\t},\n        \t\t\t{\n        \t\t\t\tfieldtype: 'Section Break',\n        \t\t\t\tfieldname: 's_break',\n        \t\t\t\tlabel: __(\"\"),\n        \t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tfieldname: \"cgst_amt\",\n\t\t\t\t\t\tlabel: __(\"CGST Amt\"),\n\t\t\t\t\t\tfieldtype: \"Data\",\n\t\t\t\t\t\t\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t        fieldtype: 'Column Break',\n\t\t\t        \tfieldname: 'c_break1'\n\t\t         \t},\n\t\t\t\t\t{\n\t\t\t\t\t\tfieldname: \"sgst_amt\",\n\t\t\t\t\t\tlabel: __(\"SGST Amt\"),\n\t\t\t\t\t\tfieldtype: \"Data\",\n\t\t\t\t\t\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t        fieldtype: 'Column Break',\n\t\t\t        \tfieldname: 'c_break1'\n\t\t         \t},\n\t\t\t\t\t{\n\t\t\t\t\t\tfieldname: \"igst_amt\",\n\t\t\t\t\t\tlabel: __(\"IGST Amt\"),\n\t\t\t\t\t\tfieldtype: \"Data\",\n\t\t\t\t\t\t\n\t\t\t\t\t},\n\t\t\t\t\t{\n        \t\t\t\tfieldtype: 'Section Break',\n        \t\t\t\tfieldname: 's_break',\n        \t\t\t\tlabel: __(\"\"),\n        \t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tfieldname: \"reversal_cgst_amt\",\n\t\t\t\t\t\tlabel: __(\"Reversal CGST Amt\"),\n\t\t\t\t\t\tfieldtype: \"Data\",\n\t\t\t\t\t\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t        fieldtype: 'Column Break',\n\t\t\t        \tfieldname: 'c_break1'\n\t\t         \t},\n\t\t\t\t\t{\n\t\t\t\t\t\tfieldname: \"reversal_sgst_amt\",\n\t\t\t\t\t\tlabel: __(\"Reversal SGST Amt\"),\n\t\t\t\t\t\tfieldtype: \"Data\",\n\t\t\t\t\t\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t        fieldtype: 'Column Break',\n\t\t\t        \tfieldname: 'c_break1'\n\t\t         \t},\n\t\t\t\t\t{\n\t\t\t\t\t\tfieldname: \"reversal_igst_amt\",\n\t\t\t\t\t\tlabel: __(\"Reversal IGST Amt\"),\n\t\t\t\t\t\tfieldtype: \"Data\",\n\t\t\t\t\t\t\n\t\t\t\t\t}\n\t\t\t\t],\n\t\t\t\tprimary_action: function() {\n\t\t\t\t\t// Perform the reversal action using the entered values\n\t\t\t\t\tvar reversalPercentage = dialog.get_value(\"reversal_percentage\");\n\t\t\t\t\t// Code for reversal action goes here\n\n\t\t\t\t\t// Close the dialog\n\t\t\t\t\tdialog.hide();\n\t\t\t\t},\n\t\t\t\tprimary_action_label: __(\"Submit\")\n\t\t\t});\n\n\t\t\tdialog.show();\n\t\t});\n\n\t\t// Position the new button next to the save button\n\t\tnewButton.style.marginLeft = \"5px\";\n\t\tnewButton.style.border = \"none\";\n\t\tnewButton.style.color = \"#fff\";\n\t\tnewButton.style.backgroundColor = \"#5e64ff\";\n\t\tnewButton.style.padding = \"3px 5px\";\n\t\tnewButton.style.borderRadius = \"5px\";\n\n\t\t// Get the index of the save button\n\t\tvar saveButtonIndex = report.page.inner_toolbar.findIndex(function(button) {\n\t\t\treturn button === saveButton;\n\t\t});\n\n\t\t// Insert the new button after the save button\n\t\treport.page.inner_toolbar.splice(saveButtonIndex + 1, 0, newButton);\n\n\t\t// Refresh the report page to update the buttons\n\t\treport.page.refresh();\n\t}\n};",
+ "letter_head": "Material Request",
+ "modified": "2023-07-07 16:30:09.597462",
+ "modified_by": "Administrator",
+ "module": "jfs",
+ "name": "Test Report",
+ "owner": "shyamkumar@8848digital.com",
+ "prepared_report": 0,
+ "ref_doctype": "Purchase Invoice",
+ "report_name": "Test Report",
+ "report_script": "columns = [\n        _(\"Invoice No\") + \"::200\",\n        _(\"Vendor/Cus Code\") + \"::120\",\n        _(\"Vendor/Cus Name\") + \"::200\",\n        _(\"Expense Gl Account\") + \"::120\",\n        _(\"Amount\") + \"::120\",\n        _(\"CGST Amt\") + \"::100\",\n        _(\"SGST Amt\") + \"::120\",\n        _(\"IGST Amt\") + \"::120\",\n        _(\"Reversal Percentage\") + \"::100\",\n        _(\"Reversal CGST Amt\") + \"::100\",\n        _(\"Reversal SGST Amt\") + \"::120\",\n        _(\"Reversal IGST Amt\") + \"::120\",\n        \n     ]\n     \nconditions = \"\"\n\n    \nif filters.company:\n    conditions = conditions+\" AND  pi.company= %(company)s\"\nif filters.supplier:\n    conditions = conditions+\" AND  pi.supplier= %(supplier)s\"\n\nif filters.posting_date:\n    conditions = conditions+\" AND  pi.posting_date= %(posting_date)s\"\n    \nif filters.posting_date:\n    conditions = conditions+\" AND  pi.posting_date= %(posting_date)s\"\n\nquery = f\"\"\"\nSELECT \n    pi.`name`,\n    pi.`supplier`,\n    pi.`supplier_name`,\n    pii.`expense_account`,\n    pi.`base_total`,\n    CASE WHEN ptc.account_head LIKE '%%CGST%%' THEN ptc.tax_amount END AS CGST,\n    CASE WHEN ptc.account_head LIKE '%%SGST%%' THEN ptc.tax_amount END AS SGST,\n    CASE WHEN ptc.account_head LIKE '%%IGST%%' THEN ptc.tax_amount END AS IGST,\n    50 AS `base_taxes_and_charges_deducted`,\n    CASE WHEN ptc.account_head LIKE '%%CGST%%' THEN ptc.tax_amount / 2 END AS `Reversal CGST Amt`,\n    CASE WHEN ptc.account_head LIKE '%%SGST%%' THEN ptc.tax_amount / 2 END AS `Reversal SGST Amt`,\n    CASE WHEN ptc.account_head LIKE '%%IGST%%' THEN ptc.tax_amount / 2 END AS `Reversal IGST Amt`\n\nFROM \n    `tabPurchase Invoice` AS pi\n    LEFT JOIN `tabPurchase Invoice Item` AS pii ON pii.parent = pi.name\n    LEFT JOIN `tabPurchase Taxes and Charges` AS ptc ON ptc.parent = pi.name\nWHERE \n    (ptc.account_head LIKE '%%CGST%%' OR ptc.account_head LIKE '%%SGST%%' OR ptc.account_head LIKE '%%IGST%%')\n      AND pi.docstatus = 1 \n    {conditions}\nGROUP BY\n    pi.`name`\nORDER BY\n    pi.`name`\n\"\"\"\n\n\ndata1 = frappe.db.sql(query, filters)\ndata = columns, data1\n\n",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Purchase User"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "System Manager"
+  }
+ ]
+}

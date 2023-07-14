@@ -1,0 +1,39 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2023-06-22 10:09:22.905985",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "javascript": "frappe.query_reports[TDS Script Report\"] = {\n\t\"filters\": [\n\t   {\n\t\t\t\"fieldname\":\"company\",\n\t\t\t\"label\": \"Company\",\n\t\t\t\"fieldtype\": \"Link\",\n\t\t\t\"options\":\"Company\"\n\t\t\t\n\t\t},\n\t\t{\n\t\t\t\"fieldname\":\"supplier\",\n\t\t\t\"label\": \"Supplier\",\n\t\t\t\"fieldtype\": \"Link\",\n\t\t\t\"options\":\"Supplier\"\n\t\t\t\n\t\t},\n\t\n     \t{\n\t\t\t\"fieldname\":\"posting_date\",\n\t\t\t\"label\": \"From Date\",\n\t\t\t\"fieldtype\": \"Date\",\n\n\t\t},\n\t\t{\n\t\t\t\"fieldname\":\"posting_date\",\n\t\t\t\"label\": \"To Date\",\n\t\t\t\"fieldtype\": \"Date\",\n\n\t\t}\n\t\n\t\n\t]\n}\n\n",
+ "letter_head": "",
+ "modified": "2023-07-13 15:52:33.573876",
+ "modified_by": "Administrator",
+ "module": "jfs",
+ "name": "TDS Script Report",
+ "owner": "shyamkumar@8848digital.com",
+ "prepared_report": 0,
+ "query": "",
+ "ref_doctype": "Purchase Invoice",
+ "report_name": "TDS Script Report",
+ "report_script": "conditions = []\nif filters.get(\"company\"):\n    conditions.append(\"pi.company = %(company)s\")\nif filters.get(\"supplier\"):\n    conditions.append(\"pi.supplier = %(supplier)s\")\nif filters.get(\"posting_date\"):\n    conditions.append(\"pi.posting_date = %(posting_date)s\")\n\nconditions_str = \" AND \".join(conditions)\nwhere_clause = f\"WHERE {conditions_str}\" if conditions else \"\"\n\n\n\n\nconditions_str = \" AND \".join(conditions)\nwhere_clause = f\"WHERE {conditions_str}\" if conditions else \"\"\n\n\npurchase_data = frappe.db.sql(f\"\"\"\n\tSELECT\n\t\tpi.`name`,\n\t\tpi.`company`,\n\t\tpi.`supplier`,\n\t\tpi.`supplier_name`,\n\t\tpi.`supplier_pan`,\n\t\ttwc.`tds_section`,\n\t\ttwr.`tax_withholding_rate`,\n\t\tsup.`supplier_type`,\n\t\tpi.`base_total`,\n\t\tpi.`posting_date`,\n\t\tpi.`posting_date`,\n\t\tpi.`tax_withholding_category`,\n\t\tpi.`challan_no`,\n\t\tpi.`challan_date`,\n\t\tpi.`bill_date`,\n\t\tpi.`bill_no`,\n\t\tpi.owner,\n\t\tusr.full_name,\n\t\tptc.account_head,\n\t\tldc.`certificate_no`,\n\t\tsup.`is_aadhar_pan_linked`,\n\t\tpi.`base_taxes_and_charges_deducted`,\n\t\tpi.`base_taxes_and_charges_deducted`\n\t\n\tFROM\n\t\t`tabPurchase Invoice` AS pi\n\tLEFT JOIN `tabTax Withholding Category` AS twc ON pi.tax_withholding_category = twc.name\n\tLEFT JOIN `tabTax Withholding Rate` AS twr ON pi.tax_withholding_category = twr.parent\n\tLEFT JOIN `tabSupplier` AS sup ON pi.supplier = sup.name\n\tLEFT JOIN `tabLower Deduction Certificate` AS ldc ON pi.supplier = ldc.supplier\n\tLEFT JOIN `tabPurchase Taxes and Charges` AS ptc ON ptc.parent = pi.name\n\tJOIN `tabFiscal Year` fy ON pi.posting_date BETWEEN fy.year_start_date AND fy.year_end_date\n\tJOIN `tabUser` AS usr ON pi.owner = usr.name\n\tLEFT JOIN `tabGL Entry` AS gl ON gl.voucher_no = pi.name\n\t{where_clause}\n\t\nUNION ALL\nSELECT\n    je.`name`,\n    je.`company`,\n    jea.`party`,\n    sup.`supplier_name`,\n    sup.`pan` AS supplier_pan,\n    twc.`tds_section` AS tds_section,\n    twr.tax_withholding_rate AS tax_withholding_rate,\n    sup.`supplier_type` AS supplier_type,\n    je.`taxable_amount` AS base_total,\n    je.`posting_date` AS posting_date,\n    je.`posting_date`,\n    sup.`tax_withholding_category` AS tax_withholding_category,\n    NULL AS base_taxes_and_charges_deducted,\n    NULL AS base_taxes_and_charges_deducted,\n    je.`supplier_invoice_date` AS bill_date,\n    je.`supplier_invoice_no` AS bill_no,\n    je.`owner` AS owner,\n    usr.`full_name` AS full_name,\n    NULL AS base_taxes_and_charges_deducted,\n    lc.`lower_deduction_certificate` AS certificate_no,\n    sup.`is_aadhar_pan_linked` AS is_aadhar_pan_linked,\n    NULL AS base_taxes_and_charges_deducted,\n    NULL AS base_taxes_and_charges_deducted\n  \n    \nFROM `tabJournal Entry` AS je\nLEFT JOIN `tabJournal Entry Account` AS jea ON jea.parent = je.name\nLEFT JOIN `tabSupplier` AS sup ON sup.name = jea.party\nLEFT JOIN `tabTax Withholding Category` AS twc ON sup.tax_withholding_category = twc.name\nLEFT JOIN `tabTax Withholding Rate` AS twr ON sup.tax_withholding_category = twr.parent\nJOIN `tabFiscal Year` fy \nJOIN `tabUser` AS usr ON je.owner = usr.name\nLEFT JOIN `tabLDC Certeficate` AS lc ON sup.name = lc.parent\nWHERE je.voucher_type = 'TDS Entry' and je.company = je.name \n\n\t\n\n\"\"\", as_dict= True)\n\n\namount_query = frappe.db.sql(\"\"\"\n\n\tSELECT\n\t\tsaa.account as \"Account\",\n\t\tge.voucher_no,\n\t\tSUM(ge.credit) AS surcharge_amount,\n\t\tNULL as ecs_amount,\n\t\tNULL as hsec_amount\n\tFROM `tabSurcharge Amount Accounts` AS saa\n\tLEFT JOIN `tabGL Entry` AS ge ON ge.account = saa.account\n\tWHERE saa.parent='TDS Report Setting'\n\tGROUP BY saa.account\n\tUNION ALL\n\tSELECT\n\t\teaa.account as \"Account\",\n\t\tge.voucher_no,\n\t\tNULL as surcharge_amount,\n\t\tSUM(ge.credit) AS ecs_amount,\n\t\tNULL as hsec_amount\n\tFROM `tabECS Amount accounts` AS eaa\n\tLEFT JOIN `tabGL Entry` AS ge ON ge.account = eaa.account\n\tWHERE eaa.parent='TDS Report Setting'\n\tGROUP BY eaa.account\n\tUNION ALL\n\tSELECT\n\t\thaa.account as \"Account\",\n\t\tge.voucher_no,\n\t\tNULL as surcharge_amount,\n\t\tNULL as ecs_amount,\n\t\tSUM(ge.credit) AS hsec_amount\n\tFROM `tabHSEC Amount Accounts` AS haa\n\tLEFT JOIN `tabGL Entry` AS ge ON ge.account = haa.account\n\tWHERE haa.parent = 'TDS Report Setting'\n\tGROUP BY haa.account;\n\n\"\"\", as_dict= True)\n\namount_dict = {}\nfor row in amount_query:\n\tamount_dict.setdefault(row.voucher_no, {})\n\tamount_dict[row.voucher_no].setdefault(\"surcharge_amount\", 0)\n\tamount_dict[row.voucher_no].setdefault(\"ecs_amount\", 0)\n\tamount_dict[row.voucher_no].setdefault(\"hsec_amount\", 0)\n\tamount_dict[row.voucher_no][\"surcharge_amount\"] = amount_dict[row.voucher_no][\"surcharge_amount\"]  + frappe.utils.flt(row.surcharge_amount)\n\tamount_dict[row.voucher_no][\"ecs_amount\"] = amount_dict[row.voucher_no][\"ecs_amount\"] + frappe.utils.flt(row.ecs_amount)\n\tamount_dict[row.voucher_no][\"hsec_amount\"] = amount_dict[row.voucher_no][\"hsec_amount\"] + frappe.utils.flt(row.hsec_amount)\n\nfor row in purchase_data:\n\tif amount_dict.get(row.name):\n\t\trow[\"surcharge_amount\"] = amount_dict.get(row.name).get(\"surcharge_amount\")\n\t\trow[\"ecs_amount\"] = amount_dict.get(row.name).get(\"ecs_amount\")\n\t\trow[\"hsec_amount\"] = amount_dict.get(row.name).get(\"hsec_amount\")\n\nresult = purchase_data\n",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Purchase User"
+  },
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Auditor"
+  }
+ ]
+}
