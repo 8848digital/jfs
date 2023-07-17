@@ -28,6 +28,23 @@ frappe.query_reports["Test Report"] = {
       fieldtype: "Float",
       "default":50
     },
+    {
+      fieldname: "status",
+      label: "Status",
+      fieldtype: "Select",
+      options: [
+        "Draft",
+        "Return",
+        "Debit Note Issued",
+        "Submitted",
+        "Paid",
+        "Partly Paid",
+        "Unpaid",
+        "Overdue",
+        "Cancelled",
+        "Internal Transfer"],
+      "default":50
+    }
   ],
   onload: function (report) {
     var newButton = report.page.add_inner_button(

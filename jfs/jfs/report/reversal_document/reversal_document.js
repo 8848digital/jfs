@@ -28,6 +28,23 @@ frappe.query_reports["Reversal Document"] = {
 		fieldtype: "Float",
 		"default":50
 	  },
+	  {
+		fieldname: "status",
+		label: "Status",
+		fieldtype: "Select",
+		options: [
+		  "Draft",
+		  "Return",
+		  "Debit Note Issued",
+		  "Submitted",
+		  "Paid",
+		  "Partly Paid",
+		  "Unpaid",
+		  "Overdue",
+		  "Cancelled",
+		  "Internal Transfer"],
+		"default":50
+	  }
 	],
 	onload: function (report) {
 	  var newButton = report.page.add_inner_button(
@@ -36,14 +53,7 @@ frappe.query_reports["Reversal Document"] = {
 		  // Custom button functionality here
 		  frappe.call({
 			method: "jfs.jfs.report.reversal_document.reversal_document.get_data",
-		args: {
-		'filters': {
-		  'company': frappe.query_report.get_filter_value('company'),
-		  'supplier': frappe.query_report.get_filter_value('supplier'),
-		  'posting_date': frappe.query_report.get_filter_value('posting_date'),
-		  'reversal_percentage': frappe.query_report.get_filter_value('reversal_percentage')
-		},
-	  },
+	
 			callback: function (r) {
 			  console.log(r.message);
 			  if (r.message == "0") {
@@ -92,6 +102,24 @@ frappe.query_reports["Reversal Document"] = {
 			  in_list_view: 1,
 			  label: "Purchase Invoice",
 			},
+			{
+                "label": "Status",
+                "fieldname": "status",
+                "fieldtype": "Select",
+                "options": [
+                        "Draft",
+                        "Return",
+                        "Debit Note Issued",
+                        "Submitted",
+                        "Paid",
+                        "Partly Paid",
+                        "Unpaid",
+                        "Overdue",
+                        "Cancelled",
+                        "Internal Transfer"],
+                
+                "width": 120
+                },
 			{
 			  fieldname: "posting_date",
 			  columns: 2,
@@ -199,6 +227,7 @@ frappe.query_reports["Reversal Document"] = {
 			  in_list_view: 1,
 			  label: "Reversal IGST Amt",
 			},
+		  
 		  ],
 		},
 	  ],
@@ -251,6 +280,7 @@ frappe.query_reports["Reversal Document"] = {
 				reversal_type: "Others",
 				company_address: item.billing_address,
 				accounts: arraya,
+			   
 			  })
 			  .then((doc) => {
 				console.log(doc);
@@ -287,6 +317,7 @@ frappe.query_reports["Reversal Document"] = {
 		  rcgst: d.rcgst,
 		  rsgst: d.rsgst,
 		  rigst: d.rigst,
+		 
 		});
 		data = cur_dialog.fields_dict.purchase_invoice.df.data;
 		cur_dialog.fields_dict.purchase_invoice.grid.refresh();

@@ -11,6 +11,26 @@ def execute(filters=None):
                 "width": 120
                 },
                 {
+                "label": "Status",
+                "fieldname": "status",
+                "fieldtype": "Select",
+                "options": [
+                        "Draft",
+                        "Return",
+                        "Debit Note Issued",
+                        "Submitted",
+                        "Paid",
+                        "Partly Paid",
+                        "Unpaid",
+                        "Overdue",
+                        "Cancelled",
+                        "Internal Transfer"],
+                
+                "width": 120
+                },
+                
+
+                {
                 "label": "Date",
                 "fieldname": "posting_date",
                 "fieldtype": "Link",
@@ -132,6 +152,7 @@ def execute(filters=None):
     data = frappe.db.sql(f"""
 SELECT
     pi.`name`,
+    pi.`status`,                    
     pi.`posting_date`,
     pi.`billing_address`,
     pi.`supplier`,
@@ -180,6 +201,7 @@ def get_data():
     data = frappe.db.sql(f"""
 SELECT
     pi.`name`,
+    pi.`status`,
     pi.`posting_date`,
     pi.`billing_address`,
     pi.`supplier`,
@@ -226,6 +248,8 @@ def get_conditions(filters):
     conditions = ""
     if filters.company:
         conditions +=f' AND pi.company ="{filters.get("company")}" '
+    if filters.status:
+        conditions +=f' AND pi.status ="{filters.get("status")}" '
     if filters.supplier:
         conditions += f' AND pi.supplier = "{filters.get("supplier")}"'
     if filters.posting_date:
