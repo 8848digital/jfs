@@ -257,11 +257,13 @@ frappe.query_reports["Reversal Document"] = {
 				  account: item.account_head,
 				  debit_in_account_currency: 0,
 				  credit_in_account_currency: item.igst,
+				  state:item.state,
 				},
 				{
 				  account: item.expense_account,
 				  debit_in_account_currency: item.igst,
 				  credit_in_account_currency: 0,
+				  state:item.state,
 				},
 			  ];
 			} else {
@@ -270,17 +272,21 @@ frappe.query_reports["Reversal Document"] = {
 				  account: item.cgst_account_head,
 				  debit_in_account_currency: 0,
 				  credit_in_account_currency: item.cgst,
+				  state:item.state,
 				},
 				{
 				  account: item.sgst_account_head,
 				  debit_in_account_currency: 0,
 				  credit_in_account_currency: item.sgst,
+				  state:item.state,
 				},
 				{
 				  account: item.expense_account,
 				  debit_in_account_currency: item.cgst * 2,
 				  credit_in_account_currency: 0,
+				  state:item.state,
 				},
+				
 			  ];
 			}
 			frappe.db
@@ -290,7 +296,7 @@ frappe.query_reports["Reversal Document"] = {
 				voucher_type: "Reversal Of ITC",
 				reversal_type: "Others",
 				company_address: item.billing_address,
-				state:item.state,
+				
 				accounts: arraya,
 				
 			   
