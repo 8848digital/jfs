@@ -148,6 +148,13 @@ def execute(filters=None):
                 "fieldtype": "Data",
                 "width": 120
                 },
+                 {
+                "label": "State",
+                "fieldname": "state",
+                "fieldtype": "Link",
+                "options":"State",
+                "width": 120
+                },
 ]
     data = frappe.db.sql(f"""
 SELECT
@@ -170,7 +177,8 @@ SELECT
     {select_fields} ,
     cgst.tax_amount * COALESCE({filters.reversal_percentage} , pi.reversal_percentage) /100 AS rcgst,
     sgst.tax_amount * COALESCE({filters.reversal_percentage}   , pi.reversal_percentage)/100 AS rsgst,
-    igst.tax_amount * COALESCE({filters.reversal_percentage} , pi.reversal_percentage)/100 AS rigst
+    igst.tax_amount * COALESCE({filters.reversal_percentage} , pi.reversal_percentage)/100 AS rigst,
+    pi.state
    
 FROM
     `tabPurchase Invoice` AS pi
@@ -219,7 +227,9 @@ SELECT
     50 AS reversal_percentage,
     cgst.tax_amount/2 AS rcgst ,
     sgst.tax_amount/2 AS rsgst ,
-    igst.tax_amount/2 AS rigst
+    igst.tax_amount/2 AS rigst,
+    pi.state
+
   
 FROM
     `tabPurchase Invoice` AS pi
