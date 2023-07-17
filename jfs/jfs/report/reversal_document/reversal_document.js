@@ -103,23 +103,26 @@ frappe.query_reports["Reversal Document"] = {
 			  label: "Purchase Invoice",
 			},
 			{
-                "label": "Status",
-                "fieldname": "status",
-                "fieldtype": "Select",
-                "options": [
-                        "Draft",
-                        "Return",
-                        "Debit Note Issued",
-                        "Submitted",
-                        "Paid",
-                        "Partly Paid",
-                        "Unpaid",
-                        "Overdue",
-                        "Cancelled",
-                        "Internal Transfer"],
-                
-                "width": 120
-                },
+			fieldname: "status",
+			columns: 1,
+			fieldtype: "Select",
+			options: [
+				"Draft",
+				"Return",
+				"Debit Note Issued",
+				"Submitted",
+				"Paid",
+				"Partly Paid",
+				"Unpaid",
+				"Overdue",
+				"Cancelled",
+				"Internal Transfer"],
+		
+		"width": 120,
+			in_list_view: 1,
+			label: "Status",
+
+            },
 			{
 			  fieldname: "posting_date",
 			  columns: 2,
@@ -302,6 +305,7 @@ frappe.query_reports["Reversal Document"] = {
 	  $.each(emp_data, function (i, d) {
 		cur_dialog.fields_dict.purchase_invoice.df.data.push({
 		  name: d.name,
+		  status:d.status,
 		  posting_date:d.posting_date,
 		  bill_date:d.bill_date,
 		  gap_days:d.gap_days,
