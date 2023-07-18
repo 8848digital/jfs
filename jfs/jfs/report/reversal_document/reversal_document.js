@@ -53,6 +53,14 @@ frappe.query_reports["Reversal Document"] = {
 		  // Custom button functionality here
 		  frappe.call({
 			method: "jfs.jfs.report.reversal_document.reversal_document.get_data",
+			args: {
+				'filters': {
+					'company': frappe.query_report.get_filter_value('company'),
+					'supplier': frappe.query_report.get_filter_value('supplier'),
+					'posting_date': frappe.query_report.get_filter_value('posting_date'),
+					'reversal_percentage': frappe.query_report.get_filter_value('reversal_percentage')
+				},
+			},
 	
 			callback: function (r) {
 			  console.log(r.message);
@@ -102,6 +110,7 @@ frappe.query_reports["Reversal Document"] = {
 			  in_list_view: 1,
 			  label: "Purchase Invoice",
 			},
+			
 			{
 			fieldname: "status",
 			columns: 1,
@@ -203,12 +212,13 @@ frappe.query_reports["Reversal Document"] = {
 			  label: "IGST AMT",
 			},
 			{
-			  fieldname: "reversal_percentage",
-			  columns: 1,
-			  fieldtype: "Data",
-			  in_list_view: 1,
-			  label: "Reversal Percentage",
-			},
+				fieldname: "reversal_percentage",
+				columns: 1,
+				fieldtype: "Data",
+				in_list_view: 1,
+				label: "Reversal Percentage",
+			  },
+			
 			{
 			  fieldname: "rcgst",
 			  columns: 1,
@@ -321,6 +331,7 @@ frappe.query_reports["Reversal Document"] = {
 	  $.each(emp_data, function (i, d) {
 		cur_dialog.fields_dict.purchase_invoice.df.data.push({
 		  name: d.name,
+		 
 		  status:d.status,
 		  posting_date:d.posting_date,
 		  bill_date:d.bill_date,
@@ -334,6 +345,7 @@ frappe.query_reports["Reversal Document"] = {
 		  sgst: d.sgst,
 		  igst: d.igst,
 		  reversal_percentage: d.reversal_percentage,
+		  
 		  rcgst: d.rcgst,
 		  rsgst: d.rsgst,
 		  rigst: d.rigst,
