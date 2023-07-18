@@ -266,12 +266,12 @@ frappe.query_reports["Reversal Document"] = {
 				{
 				  account: item.account_head,
 				  debit_in_account_currency: 0,
-				  credit_in_account_currency: item.igst,
+				  credit_in_account_currency: item.rigst,
 				  state:item.state,
 				},
 				{
 				  account: item.expense_account,
-				  debit_in_account_currency: item.igst,
+				  debit_in_account_currency: item.rigst,
 				  credit_in_account_currency: 0,
 				  state:item.state,
 				},
@@ -281,18 +281,18 @@ frappe.query_reports["Reversal Document"] = {
 				{
 				  account: item.cgst_account_head,
 				  debit_in_account_currency: 0,
-				  credit_in_account_currency: item.cgst,
+				  credit_in_account_currency: item.rcgst,
 				  state:item.state,
 				},
 				{
 				  account: item.sgst_account_head,
 				  debit_in_account_currency: 0,
-				  credit_in_account_currency: item.sgst,
+				  credit_in_account_currency: item.rsgst,
 				  state:item.state,
 				},
 				{
 				  account: item.expense_account,
-				  debit_in_account_currency: item.cgst * 2,
+				  debit_in_account_currency: item.rcgst * 2,
 				  credit_in_account_currency: 0,
 				  state:item.state,
 				},
